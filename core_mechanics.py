@@ -27,14 +27,16 @@ class StockDeck:
         for card in self.cards:
             card.show()
 
-    #Randomize card order using Fisher Yates shuffle         
+    #Randomize card order using random seed for now, implement Fisher Yates shuffle after functionality set        
     def shuffle_deck(self):
+        random.seed(0)
+        random.shuffle(self.cards)
         #move backwards through a list. For every card at index...
-        for i in range(len(self.cards)-1, 0, -1):
+        #for i in range(len(self.cards)-1, 0, -1):
             #choose a random card from the remaining cards
-            r = random.randint(0,i)
+            #r = random.randint(0,i)
             #swap the position of the random card and card at current index.
-            self.cards[i], self.cards[r] = self.cards[r], self.cards[i]
+            #self.cards[i], self.cards[r] = self.cards[r], self.cards[i]
 
     def deal_card(self):
         return self.cards.pop()
@@ -57,9 +59,23 @@ class Player:
         for card in self.hand:
             card.show()
 
-    def give_card(self, other, card):
-        other.hand.append(hand.pop(index(card)))
-        
+    def check_match(self, other, card_rank):
+        for card in other.hand:
+            if card.rank == card_rank:
+                print("{name} has a {rank}!".format(name = other.name, rank = card_rank))
+                return True
+        else:
+            print("{name} doesn't have a {rank}. Go Fish!".format(name = other.name, rank = card_rank))
+            return False
+
+    def check_pairs(self):
+        pass
+            
+            
+
+    def give_card(self, other, rank):
+        other.hand.append(hand.pop(index(rank)))
+
 
 
 #initialize players
@@ -68,17 +84,24 @@ ithu = Player('Ithu')
 tahsina = Player('Tahsina')
 biva = Player('Biva')
 rhydi = Player('Rhydi')
-print('Participants:', participants)
+#print('Participants:', participants)
 
-#initilize deck, shuffle.
+#randomize participant order.
+random.seed(0)
+random.shuffle(participants)
+print('Play Order: ',participants)
+
+#initilize deck, shuffle and deal cards to participants.
 deck = StockDeck()
 deck.shuffle_deck()
 #deck.show()
 
-#determine order of play using highest to lowest number
-max_rank = ""
-player_max_rank = ""
-for player in participants:
-    player.draw_card(deck)
-    print player.show_hand()
-    
+for person in participants:
+    for i in range(5):
+        person.draw_card(deck)
+    print("\n\n{person} has these cards:".format(person = person.name))
+    person.show_hand()
+
+
+#Test functionality of check_match()
+ithu.check_match(rhydi,'7')
